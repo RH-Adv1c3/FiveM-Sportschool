@@ -1,5 +1,6 @@
 Config = {}
-
+Config.NotificationType = 'mythic_notify'
+-- mythic_notify | esx notifications
 Config.Timers = {
 	arms = 10,
 	runs = 10,

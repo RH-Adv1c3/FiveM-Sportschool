@@ -1,4 +1,5 @@
 local training,isResting = false,false
+local isMember = true
 ESX = nil
 function hintToDisplay(text)
 	SetTextComponentFormat("STRING")
@@ -6,7 +7,13 @@ function hintToDisplay(text)
 	DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 end
 
-local isMember = true
+local function ShowNotification(msgType,msgTimer,msg)
+	if Config.NotificationType == 'mythic_notify' then
+		exports['mythic_notify']:DoCustomHudText(msgType,msg,msgTimer)
+	elseif Config.NotificationType == 'esx' then
+		ESX.ShowNotification(msg,false,false)
+	end
+end
 
 function isMemberFunction()
 	lib.callback('hx_sporten:hasID',false,function(r)
@@ -28,7 +35,7 @@ Citizen.CreateThread(function()
 		EndTextCommandSetBlipName(info.blip)
 	end
 	while ESX == nil do
-		TriggerEvent('ishgucciNiffo:getFuckingDuckedWhileSitting',function(obj) ESX = obj end)
+		TriggerEvent('esx:getSharedObject',function(obj) ESX = obj end)
 		Citizen.Wait(250)
 	end
 end)
@@ -45,7 +52,7 @@ function trainArms()
 			TriggerServerEvent('hx_sporten:endTraining','arms')
 			startCooldown('arms')
 		else
-			TriggerServerEvent('hx_API:newNotify','error',5,'Je hebt geen Leden pas bij je')
+			ShowNotification('error',5,'Je hebt geen LedenPas bij je')
 		end
 	end
 end
@@ -62,7 +69,7 @@ function trainRuns()
 			TriggerServerEvent('hx_sporten:endTraining','runs')
 			startCooldown('runs')
 		else
-			TriggerServerEvent('hx_API:newNotify','error',5,'Je hebt geen Leden pas bij je')
+			ShowNotification('error',5,'Je hebt geen Leden pas bij je')
 		end
 	end
 end
@@ -79,7 +86,7 @@ function trainChins()
 			TriggerServerEvent('hx_sporten:endTraining','chins')
 			startCooldown('chins')
 		else
-			TriggerServerEvent('hx_API:newNotify','error',5,'Je hebt geen Leden pas bij je')
+			ShowNotification('error',5,'Je hebt geen Leden pas bij je')
 		end
 	end
 end
@@ -95,7 +102,7 @@ function trainYoga()
 			TriggerServerEvent('hx_sporten:endTraining','yoga')
 			startCooldown('yoga')
 		else
-			TriggerServerEvent('hx_API:newNotify','error',5,'Je hebt geen Leden pas bij je')
+			ShowNotification('error',5,'Je hebt geen Leden pas bij je')
 		end
 	end
 end
@@ -111,7 +118,7 @@ function trainushup()
 			TriggerServerEvent('hx_sporten:endTraining','pushups')
 			startCooldown('pushups')
 		else
-			TriggerServerEvent('hx_API:newNotify','error',5,'Je hebt geen Leden pas bij je')
+			ShowNotification('error',5,'Je hebt geen Leden pas bij je')
 		end
 	end
 end
@@ -123,7 +130,7 @@ function flexSpieren()
 		exports.rprogress:Start('Spieren Showen',20000)
 		ClearPedTasksImmediately(pPed)
 	else
-		TriggerServerEvent('hx_API:newNotify','error',5,'Je hebt geen Leden pas bij je')
+		ShowNotification('error',5,'Je hebt geen Leden pas bij je')
 	end
 end
 
@@ -223,7 +230,7 @@ RegisterNetEvent('hx_sporten:sportWinkelMenu', function(id, number)
 end)
 
 function ifResting()
-	if isResting then TriggerServerEvent('hx_API:newNotify','error',5,'Je zit nog in je rust periode') end
+	if isResting then ShowNotification('error',5,'Je zit nog in je rust periode') end
 	return isResting
 end
 
